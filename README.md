@@ -164,14 +164,43 @@ npx allure generate --clean && npx allure open
 │   │   │   ├── content-analysis.cy.js # Análise com IA
 │   │   │   └── smart-validation.cy.js # Validação inteligente
 │   │   └── spec.cy.js                # Teste template básico
+│   ├── pages/                        # 📋 Page Object Model (POM)
+│   │   ├── auth/
+│   │   │   ├── SignupPage.js         # Página de cadastro
+│   │   │   ├── LoginPage.js          # Página de login
+│   │   │   └── PasswordResetPage.js  # Página de recuperação
+│   │   ├── dashboard/
+│   │   │   ├── DashboardPage.js      # Página principal
+│   │   │   ├── NotesPage.js          # Página de notas
+│   │   │   └── ProfilePage.js        # Página de perfil
+│   │   ├── crud/
+│   │   │   ├── NotesListPage.js      # Lista de notas
+│   │   │   ├── NoteFormPage.js       # Formulário de nota
+│   │   │   ├── UsersListPage.js      # Lista de usuários
+│   │   │   └── UserFormPage.js       # Formulário de usuário
+│   │   ├── upload/
+│   │   │   ├── FileUploadPage.js     # Página de upload
+│   │   │   └── MediaGalleryPage.js   # Galeria de mídia
+│   │   ├── iframe/
+│   │   │   ├── EmbeddedFormPage.js   # Formulários embedados
+│   │   │   └── WidgetPage.js         # Widgets em iframe
+│   │   └── base/
+│   │       ├── BasePage.js           # Classe base para todas as páginas
+│   │       ├── NavigationComponent.js # Componente de navegação
+│   │       └── HeaderComponent.js    # Componente de cabeçalho
 │   ├── fixtures/
 │   │   ├── example.json              # Dados de teste estáticos
 │   │   ├── test-files/               # Arquivos para upload
-│   │   └── ai-responses/             # Respostas mockadas da IA
+│   │   ├── ai-responses/             # Respostas mockadas da IA
+│   │   └── users/                    # Dados de usuários para teste
+│   │       ├── valid-users.json      # Usuários válidos
+│   │       └── invalid-users.json    # Usuários inválidos
 │   └── support/
 │       ├── commands.js               # Comandos customizados
 │       ├── e2e.js                   # Configurações globais
-│       └── ai-helpers.js            # Funções auxiliares para IA
+│       ├── ai-helpers.js            # Funções auxiliares para IA
+│       ├── data-helpers.js          # Helpers para manipulação de dados
+│       └── page-helpers.js          # Helpers específicos para POM
 ├── allure-results/                   # Dados dos relatórios Allure
 ├── allure-report/                    # Relatórios HTML gerados
 ├── cypress.config.js                 # Configuração do Cypress
@@ -186,13 +215,34 @@ npx allure generate --clean && npx allure open
 
 ### **Autenticação (signup.cy.js)** ✅
 1. **Geração de dados**: Cria email único usando UUID + domínio Mailosaur
-2. **Navegação**: Acessa página de cadastro
-3. **Preenchimento**: Insere dados no formulário
-4. **Submissão**: Clica no botão de cadastro
+2. **Navegação**: Acessa página de cadastro via `SignupPage.visit()`
+3. **Preenchimento**: Insere dados usando `SignupPage.fillForm(userData)`
+4. **Submissão**: Clica no botão através de `SignupPage.submitForm()`
 5. **Aguarda email**: Usa Mailosaur para capturar email de confirmação
 6. **Extração de código**: Usa regex para extrair código de 6 dígitos
-7. **Confirmação**: Insere código e submete
-8. **Validação**: Verifica redirecionamento e elementos da página logada
+7. **Confirmação**: Insere código com `SignupPage.enterConfirmationCode(code)`
+8. **Validação**: Verifica redirecionamento usando `DashboardPage.isVisible()`
+
+#### **Exemplo de uso do POM:**
+```javascript
+// signup.cy.js
+import { SignupPage } from '../pages/auth/SignupPage'
+import { DashboardPage } from '../pages/dashboard/DashboardPage'
+
+const signupPage = new SignupPage()
+const dashboardPage = new DashboardPage()
+
+// Uso limpo e legível
+signupPage.visit()
+signupPage.fillForm({
+  email: emailAddress,
+  password: password,
+  confirmPassword: password
+})
+signupPage.submitForm()
+signupPage.enterConfirmationCode(confirmationCode)
+dashboardPage.shouldBeVisible()
+```
 
 ### **CRUD Operations** 🔄 *(Em Desenvolvimento)*
 - **Criação**: Testa formulários de criação com validação
@@ -215,6 +265,39 @@ npx allure generate --clean && npx allure open
 - Análise automatizada de conteúdo
 - Validação contextual inteligente
 - Relatórios enriquecidos com insights de IA
+
+## 🏗️ Arquitetura - Page Object Model (POM)
+
+Este projeto implementa o padrão **Page Object Model** para manter o código organizado, reutilizável e de fácil manutenção.
+
+### **Estrutura do POM**
+
+#### **📋 Base Classes**
+- **`BasePage.js`** - Classe base com métodos comuns a todas as páginas
+- **`NavigationComponent.js`** - Componente reutilizável de navegação
+- **`HeaderComponent.js`** - Componente de cabeçalho e menu
+
+#### **🔐 Auth Pages**
+- **`SignupPage.js`** - Encapsula elementos e ações da página de cadastro
+- **`LoginPage.js`** - Métodos para login e validações
+- **`PasswordResetPage.js`** - Funcionalidades de recuperação de senha
+
+#### **📊 CRUD Pages**
+- **`NotesListPage.js`** - Lista, filtros e paginação de notas
+- **`NoteFormPage.js`** - Criação e edição de notas
+- **`UsersListPage.js`** - Gerenciamento de usuários
+- **`UserFormPage.js`** - Formulários de usuário
+
+#### **📎 Upload Pages**
+- **`FileUploadPage.js`** - Upload de arquivos e validações
+- **`MediaGalleryPage.js`** - Visualização e gerenciamento de mídia
+
+### **Benefícios do POM**
+- ✅ **Reutilização** de código entre testes
+- ✅ **Manutenção** centralizada de seletores
+- ✅ **Legibilidade** melhorada dos testes
+- ✅ **Separação** clara entre lógica de teste e interação com UI
+- ✅ **Escalabilidade** para projetos grandes
 
 ## 🔍 Scripts Disponíveis
 
