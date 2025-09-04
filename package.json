@@ -1,0 +1,26 @@
+{
+  "name": "e2e-cypress-update",
+  "version": "1.0.0",
+  "main": "cypress.config.js",
+  "scripts": {
+    "lint": "eslint cypress/**/*.js && eslint cypress.config.js",
+    "lint:fix": "eslint cypress/**/*.js --fix && eslint cypress.config.js --fix",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "cypress": "^15.1.0",
+    "cypress-mailosaur": "^2.17.0",
+    "eslint": "^9.34.0",
+    "eslint-plugin-react": "^7.37.5",
+    "faker": "^6.6.6",
+    "globals": "^16.3.0"
+  },
+  "dependencies": {
+    "eslint-plugin-cypress": "^5.1.1"
+  }
+}

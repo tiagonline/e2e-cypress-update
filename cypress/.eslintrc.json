@@ -1,0 +1,40 @@
+{
+  "extends": [
+    "plugin:cypress/recommended"
+  ],
+  "plugins": [
+    "cypress"
+  ],
+  "env": {
+    "cypress/globals": true,
+    "node": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "rules": {
+    "cypress/no-assigning-return-values": "error",
+    "cypress/no-unnecessary-waiting": "error",
+    "cypress/assertion-before-screenshot": "warn",
+    "cypress/no-force": "warn",
+    "cypress/no-async-tests": "error",
+    "cypress/no-pause": "error",
+    "no-unused-vars": "warn",
+    "no-console": "warn",
+    "prefer-const": "error",
+    "no-var": "error",
+    "semi": ["error", "always"],
+    "quotes": ["error", "single"],
+    "indent": ["error", 2],
+    "comma-dangle": ["error", "never"],
+    "eol-last": ["error", "always"]
+  },
+  "globals": {
+    "cy": "readonly",
+    "Cypress": "readonly",
+    "expect": "readonly",
+    "assert": "readonly"
+  }
+}
