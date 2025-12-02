@@ -1,4 +1,4 @@
-# 🧪 Cypress E2E Testing - Projeto Abrangente
+# 🧪 Cypress E2E Testing - update
 
 Este projeto é um **estudo prático e abrangente de testes end-to-end (E2E)** usando **Cypress** que explora diversos cenários complexos de automação, desde verificação de emails até integração com IA.
 
